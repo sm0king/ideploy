@@ -35,6 +35,7 @@ const DoBuild = React.createClass({
       selectedFiles: [],
       curMachineId: 0,
       isNpmInstall: 1,
+      isBowerInstall: 1,
       showBuildInfo: false,
       buildInfoTitle: '',
       nowDirs: [],
@@ -42,6 +43,7 @@ const DoBuild = React.createClass({
       content:'',
       distFiles: [],
       npmInstallIsCheck: false,
+      bowerInstallCheck: false,
       buildResult: [],
       canViewBuild:false,
       machineList: []
@@ -82,6 +84,15 @@ const DoBuild = React.createClass({
         this.setState({isNpmInstall: '1'});
     }
      this.setState({npmInstallIsCheck: e.target.checked});
+  },
+  handleBowerInstallCheck(e){
+    if(e.target.checked){
+        this.setState({isBowerInstall: '2'});
+    }
+    else {
+        this.setState({isBowerInstall: '1'});
+    }
+     this.setState({bowerInstallCheck: e.target.checked});
   },
   getMachineInfo(curMachineId) {
     for (let i = 0; i < this.props.machineList.length; i++) {
@@ -176,6 +187,7 @@ const DoBuild = React.createClass({
     }
     let machineId = this.state.curMachineId;
     let isNpmInstall = this.state.isNpmInstall;
+    let isBowerInstall = this.state.isBowerInstall;
     let incExc = this.state.incExc;
 
     let deployFiles = JSON.parse(JSON.stringify(this.props.selectedFiles));
@@ -192,6 +204,7 @@ const DoBuild = React.createClass({
         id: id,
         deployFiles: JSON.stringify(deployFiles),
         isNpmInstall: isNpmInstall,
+        isBowerInstall: isBowerInstall,
         incExc: incExc,
         buildType: self.state.buildType,
         buildTask: self.state.buildTask,
@@ -294,6 +307,11 @@ const DoBuild = React.createClass({
           <Row type="flex" justify="end" style={{
             'margin-top': '20px'
           }}>
+            <Checkbox checked={this.state.bowerInstallCheck} style={{
+              'line-height': '28px',
+              'display':showNodeModule,
+              'padding-right': '10px'
+            }} onChange={this.handleBowerInstallCheck.bind(that)}>是否更新bower</Checkbox>
             <Checkbox checked={this.state.npmInstallIsCheck} style={{
               'line-height': '28px',
               'display':showNodeModule,

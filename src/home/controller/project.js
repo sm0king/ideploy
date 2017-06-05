@@ -297,7 +297,7 @@ export default class extends Base {
         }
         this.success(reInfo);
     }
-    async doBuild(proId, machineId, buildTask, buildType, incExc, isNpmInstall, deployFiles, isQuickDeploy, sync) {
+    async doBuild(proId, machineId, buildTask, buildType, incExc, isNpmInstall, deployFiles, isQuickDeploy, isBowerInstall, sync) {
         let proModel = new ProModel();
         let sessionUser = await this.http.session('user');
         let nowLogFile = await this.http.session('logFile');
@@ -322,7 +322,7 @@ export default class extends Base {
             let homeDir = __dirname.replace('app/home/controller', '');
             await buildInstance.initBuildDir(bInfo, deployFiles, sessionUser.name, homeDir, incExc);
         }
-        let result = await buildInstance.build(bInfo, nowLogFile, sessionUser.name, isNpmInstall, isInc, incExc, sync);
+        let result = await buildInstance.build(bInfo, nowLogFile, sessionUser.name, isNpmInstall, isInc, incExc, isBowerInstall, sync);
         result.isQuickDeploy = isQuickDeploy;
         return result;
     }
@@ -335,7 +335,8 @@ export default class extends Base {
         let isNpmInstall = this.param('isNpmInstall');
         let deployFiles = JSON.parse(this.param('deployFiles'));
         let isQuickDeploy = this.param('quick_deploy');
-        let result = await this.doBuild(proId, machineId, buildTask, buildType, incExc, isNpmInstall, deployFiles, isQuickDeploy, false);
+        let isBowerInstall = this.param('isBowerInstall');
+        let result = await this.doBuild(proId, machineId, buildTask, buildType, incExc, isNpmInstall, deployFiles, isQuickDeploy, isBowerInstall, false);
         //result.bInfo = bInfo;
         this.success(result);
     }
@@ -623,7 +624,7 @@ export default class extends Base {
             result.log.push(log);
             this.http.session('batchDeployData', result.log);
             let checkout = await this.doCheckOut(pro); //checkout
-            let build = await this.doBuild(pro.id, item.mInfo.id, '', 1, 1, item.isNpmInstall, [], false, true); //build
+            let build = await this.doBuild(pro.id, item.mInfo.id, '', 1, 1, item.isNpmInstall, [], false, item.isBowerInstall true); //build
             let machineArr = [item.mInfo];
             let deploy = await this.doDeploy(pro.id, item.mInfo.id, 1, item.desc, '', [], machineArr, item.onlineReason, 'false', pro.codeUrl, pro.vcsType, pro.lastTag);
             log.deployLogFile = await this.http.session('deployLogFile');

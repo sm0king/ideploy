@@ -29,7 +29,7 @@ export default class extends think.service.base {
         }
 
     }
-    async build(buildInfo, logFile, username, isNpmInstall, isInc, incExc, sync) {
+    async build(buildInfo, logFile, username, isNpmInstall, isInc, incExc, isBowerInstall, sync) {
         let self = this;
         let fileU = new fileUtil();
         let buildDir = fileU.getCvsDir(username, buildInfo.pro_id);
@@ -42,13 +42,14 @@ export default class extends think.service.base {
         console.log('task:', buildInfo);
         let code_lang = buildInfo.code_lang;
         let build_shell = './src/common/service/impl/build_' + code_lang + '.sh';
-        console.log(build_shell, buildDir, task, buildInfo.pro_id, isNpmInstall);
+        console.log(build_shell, buildDir, task, buildInfo.pro_id, isNpmInstall, isBowerInstall);
         ///执行build_hook before
         buildInfo.shellParams={
           build_shell: build_shell,
           buildDir: buildDir,
           task:task,
-          isNpmInstall:isNpmInstall
+          isNpmInstall:isNpmInstall,
+          isBowerInstall:isBowerInstall
         }
         let hook= buildInfo.build_hook;
         let hookArray = [];
@@ -65,7 +66,7 @@ export default class extends think.service.base {
           hookArray[i].before(buildInfo);
         }
         if (sync) {
-            let cmdParam = [buildDir, "'" + task + "'", buildInfo.pro_id, isNpmInstall].join(' ');
+            let cmdParam = [buildDir, "'" + task + "'", buildInfo.pro_id, isNpmInstall, isBowerInstall].join(' ');
             let cmd = build_shell + ' ' + cmdParam;
             //改成同步执行
             let changeLog = await childProcessPro.exec(cmd, {

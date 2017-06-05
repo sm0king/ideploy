@@ -33,6 +33,11 @@ echo '创建node_modules软连接  ln -s  ${modulesPath}/node_modules node_modul
 ln -s ../../mods/$3/node_modules ./node_modules
 pwd
 
+if [ "$5" -eq "2" ]; then
+  bower install
+fi
+echo 'bower installed'
+
 echo '开始构建'
 
 npm run  $2
