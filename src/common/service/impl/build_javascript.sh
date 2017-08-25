@@ -29,9 +29,10 @@ pwd
 
 cd $projectPath
 pwd
-echo '创建node_modules软连接  ln -s  ${modulesPath}/node_modules node_modules ---'
-ln -s ../../mods/$3/node_modules ./node_modules
-pwd
+# roadhog bug 暂时取消软连接
+# echo '创建node_modules软连接  ln -s  ${modulesPath}/node_modules node_modules ---'
+# ln -s ../../mods/$3/node_modules ./node_modules
+# pwd
 
 if [ "$5" -eq "2" ]; then
   bower install
